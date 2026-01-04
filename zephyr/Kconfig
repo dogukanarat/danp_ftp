@@ -6,9 +6,14 @@ menuconfig DANP_FTP
 if DANP_FTP
     config DANP_FTP_LOG_LEVEL
         int "DANP_FTP log level"
-        default 3
+        default 2
         help
-        Set the log level for the DANP_FTP (0-4).
+            Set the log level for the DANP module:
+            0: Off
+            1: Error
+            2: Warning
+            3: Info
+            4: Debug
     config DANP_FTP_SERVICE_PORT
         int "DANP FTP service port id"
         default 21

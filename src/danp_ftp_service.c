@@ -4,7 +4,8 @@
 
 /* Includes */
 
-#include "osal/osalMemory.h"
+#include "osal/osal_thread.h"
+#include "osal/osal_memory.h"
 #include "danp/ftp/danp_ftp_service.h"
 #include "danp/ftp/danp_ftp.h"
 #include "danp/danp.h"
@@ -49,7 +50,7 @@ typedef struct danp_ftp_service_context_s
 {
     danp_ftp_service_config_t config;
     danp_socket_t *listen_socket;
-    osalThreadHandle_t service_thread;
+    osal_thread_handle_t service_thread;
     bool is_running;
     bool is_initialized;
 } danp_ftp_service_context_t;
@@ -831,14 +832,14 @@ static void danp_ftp_service_thread(void *arg)
     danp_ftp_service_context_t *svc = (danp_ftp_service_context_t *)arg;
     danp_socket_t *client_socket = NULL;
     danp_ftp_client_context_t *client_ctx = NULL;
-    osalThreadHandle_t client_thread = NULL;
-    osalThreadAttr_t client_thread_attr = {
+    osal_thread_handle_t client_thread = NULL;
+    osal_thread_attr_t client_thread_attr = {
         .name = "ftpClient",
-        .stackSize = DANP_FTP_SERVICE_STACK_SIZE,
-        .stackMem = NULL,
+        .stack_size = DANP_FTP_SERVICE_STACK_SIZE,
+        .stack_mem = NULL,
         .priority = OSAL_THREAD_PRIORITY_NORMAL,
-        .cbMem = NULL,
-        .cbSize = 0,
+        .cb_mem = NULL,
+        .cb_size = 0,
     };
 
     for (;;)
@@ -864,7 +865,7 @@ static void danp_ftp_service_thread(void *arg)
                 client_socket->remote_node);
 
             /* Allocate client context */
-            client_ctx = (danp_ftp_client_context_t *)osalMemoryAlloc(
+            client_ctx = (danp_ftp_client_context_t *)osal_memory_alloc(
                 sizeof(danp_ftp_client_context_t));
 
             if (!client_ctx)
@@ -881,7 +882,7 @@ static void danp_ftp_service_thread(void *arg)
             client_ctx->file_open = false;
 
             /* Create client handler thread */
-            client_thread = osalThreadCreate(
+            client_thread = osal_thread_create(
                 danp_ftp_client_handler_thread,
                 client_ctx,
                 &client_thread_attr);
@@ -890,7 +891,7 @@ static void danp_ftp_service_thread(void *arg)
             {
                 danp_log_message(DANP_LOG_ERROR, "FTP service failed to create client thread");
                 danp_close(client_socket);
-                osalMemoryFree(client_ctx);
+                osal_memory_free(client_ctx);
                 continue;
             }
         }
@@ -911,14 +912,14 @@ int32_t danp_ftp_service_init(const danp_ftp_service_config_t *config)
     int32_t ret = 0;
     danp_socket_t *sock = NULL;
     int32_t bind_result;
-    osalThreadHandle_t thread_handle = NULL;
-    osalThreadAttr_t thread_attr = {
+    osal_thread_handle_t thread_handle = NULL;
+    osal_thread_attr_t thread_attr = {
         .name = "ftpService",
-        .stackSize = DANP_FTP_SERVICE_STACK_SIZE,
-        .stackMem = NULL,
+        .stack_size = DANP_FTP_SERVICE_STACK_SIZE,
+        .stack_mem = NULL,
         .priority = OSAL_THREAD_PRIORITY_NORMAL,
-        .cbMem = NULL,
-        .cbSize = 0,
+        .cb_mem = NULL,
+        .cb_size = 0,
     };
 
     for (;;)
@@ -973,7 +974,7 @@ int32_t danp_ftp_service_init(const danp_ftp_service_config_t *config)
         ftp_service_ctx.is_initialized = true;
 
         /* Create service thread */
-        thread_handle = osalThreadCreate(
+        thread_handle = osal_thread_create(
             danp_ftp_service_thread,
             &ftp_service_ctx,
             &thread_attr);
