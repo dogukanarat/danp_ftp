@@ -1,9 +1,9 @@
-/* scaffold_project.h - Main API header for scaffold_project library */
+/* danp_ftp.h - Main API header for danp_ftp library */
 
 /* All Rights Reserved */
 
-#ifndef INC_SCAFFOLD_PROJECT_H
-#define INC_SCAFFOLD_PROJECT_H
+#ifndef INC_DANP_FTP_H
+#define INC_DANP_FTP_H
 
 #ifdef __cplusplus
 extern "C"
@@ -12,7 +12,7 @@ extern "C"
 
 /* Includes */
 
-#include "scaffold_project_types.h"
+#include "danp_ftp_types.h"
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -32,7 +32,7 @@ extern "C"
  *
  * @return Version string in format "major.minor.patch"
  */
-SCAFFOLD_PROJECT_API const char *scaffold_project_get_version(void);
+DANP_FTP_API const char *danp_ftp_get_version(void);
 
 /**
  * @brief Add two integers with saturation on overflow/underflow
@@ -41,7 +41,7 @@ SCAFFOLD_PROJECT_API const char *scaffold_project_get_version(void);
  * @param b Second operand
  * @return Saturated sum of a and b
  */
-SCAFFOLD_PROJECT_API int32_t scaffold_project_add(int32_t a, int32_t b);
+DANP_FTP_API int32_t danp_ftp_add(int32_t a, int32_t b);
 
 /**
  * @brief Multiply two integers with error handling
@@ -49,9 +49,9 @@ SCAFFOLD_PROJECT_API int32_t scaffold_project_add(int32_t a, int32_t b);
  * @param a First operand
  * @param b Second operand
  * @param result Pointer to store result
- * @return SCAFFOLD_PROJECT_SUCCESS on success, error code otherwise
+ * @return DANP_FTP_SUCCESS on success, error code otherwise
  */
-SCAFFOLD_PROJECT_API scaffold_project_status_t scaffold_project_multiply(
+DANP_FTP_API danp_ftp_status_t danp_ftp_multiply(
     int32_t a,
     int32_t b,
     int32_t *result);
@@ -62,9 +62,9 @@ SCAFFOLD_PROJECT_API scaffold_project_status_t scaffold_project_multiply(
  * @param input Input string to process
  * @param output Buffer to store processed string
  * @param outputSize Size of output buffer
- * @return SCAFFOLD_PROJECT_SUCCESS on success, error code otherwise
+ * @return DANP_FTP_SUCCESS on success, error code otherwise
  */
-SCAFFOLD_PROJECT_API scaffold_project_status_t scaffold_project_foo(
+DANP_FTP_API danp_ftp_status_t danp_ftp_foo(
     const char *input,
     char *output,
     size_t outputSize);
@@ -75,7 +75,7 @@ SCAFFOLD_PROJECT_API scaffold_project_status_t scaffold_project_foo(
  * @param value Value to validate
  * @return true if valid, false otherwise
  */
-SCAFFOLD_PROJECT_API bool scaffold_project_bar(int32_t value);
+DANP_FTP_API bool danp_ftp_bar(int32_t value);
 
 /**
  * @brief Compute factorial of a number
@@ -83,10 +83,10 @@ SCAFFOLD_PROJECT_API bool scaffold_project_bar(int32_t value);
  * @param n Input number (must be >= 0 and <= 12)
  * @return Result structure with factorial value and status
  */
-SCAFFOLD_PROJECT_API scaffold_project_result_t scaffold_project_factorial(int32_t n);
+DANP_FTP_API danp_ftp_result_t danp_ftp_factorial(int32_t n);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* INC_SCAFFOLD_PROJECT_H */
+#endif /* INC_DANP_FTP_H */

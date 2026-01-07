@@ -1,4 +1,4 @@
-/* example_embedded.c - Embedded-safe example for scaffold_project */
+/* example_embedded.c - Embedded-safe example for danp_ftp */
 
 /* All Rights Reserved */
 
@@ -9,7 +9,7 @@
 
 /* Includes */
 
-#include "scaffold_project/scaffold_project.h"
+#include "danp_ftp/danp_ftp.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -28,13 +28,13 @@ int main(void)
     int32_t multiplyResult = 0;
     char output[OUTPUT_BUFFER_SIZE];
 
-    (void)scaffold_project_get_version();
+    (void)danp_ftp_get_version();
 
-    (void)scaffold_project_add(10, 20);
-    (void)scaffold_project_multiply(3, 7, &multiplyResult);
-    (void)scaffold_project_foo("embedded", output, sizeof(output));
-    (void)scaffold_project_bar(42);
-    (void)scaffold_project_factorial(5);
+    (void)danp_ftp_add(10, 20);
+    (void)danp_ftp_multiply(3, 7, &multiplyResult);
+    (void)danp_ftp_foo("embedded", output, sizeof(output));
+    (void)danp_ftp_bar(42);
+    (void)danp_ftp_factorial(5);
 
     (void)multiplyResult;
     (void)output;

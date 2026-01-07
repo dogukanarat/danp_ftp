@@ -1,9 +1,9 @@
-/* example.c - CLI application demonstrating scaffold_project library */
+/* example.c - CLI application demonstrating danp_ftp library */
 
 /* All Rights Reserved */
 
 /*
- * This example demonstrates using the scaffold_project library with:
+ * This example demonstrates using the danp_ftp library with:
  * - getopt for command-line argument parsing
  * - Signal handling for graceful shutdown
  * - POSIX file I/O operations
@@ -14,7 +14,7 @@
 
 /* Includes */
 
-#include "scaffold_project/scaffold_project.h"
+#include "danp_ftp/danp_ftp.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -238,11 +238,11 @@ static void printVersion(bool verbose)
 {
     if (verbose)
     {
-        const char msg[] = "Calling scaffold_project_get_version()...\n";
+        const char msg[] = "Calling danp_ftp_get_version()...\n";
         write(STDERR_FILENO, msg, sizeof(msg) - 1);
     }
 
-    const char *version = scaffold_project_get_version();
+    const char *version = danp_ftp_get_version();
     printf("%s\n", version);
 
     if (verbose)
@@ -259,10 +259,10 @@ static void doAdd(int32_t a, int32_t b, bool verbose)
 {
     if (verbose)
     {
-        dprintf(STDERR_FILENO, "Calling scaffold_project_add(%d, %d)...\n", a, b);
+        dprintf(STDERR_FILENO, "Calling danp_ftp_add(%d, %d)...\n", a, b);
     }
 
-    int32_t result = scaffold_project_add(a, b);
+    int32_t result = danp_ftp_add(a, b);
     printf("%d\n", result);
 
     if (verbose)
@@ -280,12 +280,12 @@ static void doMultiply(int32_t a, int32_t b, bool verbose)
 
     if (verbose)
     {
-        dprintf(STDERR_FILENO, "Calling scaffold_project_multiply(%d, %d, &result)...\n", a, b);
+        dprintf(STDERR_FILENO, "Calling danp_ftp_multiply(%d, %d, &result)...\n", a, b);
     }
 
-    scaffold_project_status_t status = scaffold_project_multiply(a, b, &result);
+    danp_ftp_status_t status = danp_ftp_multiply(a, b, &result);
 
-    if (status == SCAFFOLD_PROJECT_SUCCESS)
+    if (status == DANP_FTP_SUCCESS)
     {
         printf("%d\n", result);
         if (verbose)
@@ -309,13 +309,13 @@ static void doFoo(const char *input, bool verbose)
 
     if (verbose)
     {
-        dprintf(STDERR_FILENO, "Calling scaffold_project_foo(\"%s\", output, %d)...\n", input,
+        dprintf(STDERR_FILENO, "Calling danp_ftp_foo(\"%s\", output, %d)...\n", input,
                 BUFFER_SIZE);
     }
 
-    scaffold_project_status_t status = scaffold_project_foo(input, output, sizeof(output));
+    danp_ftp_status_t status = danp_ftp_foo(input, output, sizeof(output));
 
-    if (status == SCAFFOLD_PROJECT_SUCCESS)
+    if (status == DANP_FTP_SUCCESS)
     {
         printf("%s\n", output);
         if (verbose)
@@ -337,10 +337,10 @@ static void doBar(int32_t value, bool verbose)
 {
     if (verbose)
     {
-        dprintf(STDERR_FILENO, "Calling scaffold_project_bar(%d)...\n", value);
+        dprintf(STDERR_FILENO, "Calling danp_ftp_bar(%d)...\n", value);
     }
 
-    bool isValid = scaffold_project_bar(value);
+    bool isValid = danp_ftp_bar(value);
     printf("%s\n", isValid ? "valid" : "invalid");
 
     if (verbose)
@@ -356,12 +356,12 @@ static void doFactorial(int32_t n, bool verbose)
 {
     if (verbose)
     {
-        dprintf(STDERR_FILENO, "Calling scaffold_project_factorial(%d)...\n", n);
+        dprintf(STDERR_FILENO, "Calling danp_ftp_factorial(%d)...\n", n);
     }
 
-    scaffold_project_result_t result = scaffold_project_factorial(n);
+    danp_ftp_result_t result = danp_ftp_factorial(n);
 
-    if (result.status == SCAFFOLD_PROJECT_SUCCESS)
+    if (result.status == DANP_FTP_SUCCESS)
     {
         printf("%d\n", result.value);
         if (verbose)
@@ -372,7 +372,7 @@ static void doFactorial(int32_t n, bool verbose)
     else
     {
         fprintf(stderr, "Error: factorial failed with status code %d\n", result.status);
-        if (result.status == SCAFFOLD_PROJECT_ERROR_INVALID)
+        if (result.status == DANP_FTP_ERROR_INVALID)
         {
             fprintf(stderr, "Note: Input must be between 0 and 12\n");
         }

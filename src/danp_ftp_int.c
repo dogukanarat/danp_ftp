@@ -1,4 +1,4 @@
-/* scaffold_project_int.c - one line definition */
+/* danp_ftp_int.c - one line definition */
 
 /* All Rights Reserved */
 
