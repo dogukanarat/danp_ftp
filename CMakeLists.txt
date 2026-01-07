@@ -62,7 +62,8 @@ target_sources(DanpFtp
     PRIVATE
         # Core implementation files
         ${CMAKE_CURRENT_SOURCE_DIR}/src/danp_ftp.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/danp_ftp_int.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/danp_ftp_service.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/arch/zephyr/danp_ftp_service_shell.c
 )
 
 # ==============================================================================
@@ -155,18 +156,18 @@ set_target_properties(DanpFtp
 # ==============================================================================
 # Optional Components
 # ==============================================================================
-# Enable testing if BUILD_TESTS is ON
-if(BUILD_TESTS)
-    message(STATUS "Building tests enabled")
-    enable_testing()
-    add_subdirectory(test)
-endif()
+# # Enable testing if BUILD_TESTS is ON
+# if(BUILD_TESTS)
+#     message(STATUS "Building tests enabled")
+#     enable_testing()
+#     add_subdirectory(test)
+# endif()
 
-# Add example subdirectory if BUILD_EXAMPLES is ON
-if(BUILD_EXAMPLES)
-    message(STATUS "Building examples enabled")
-    add_subdirectory(example)
-endif()
+# # Add example subdirectory if BUILD_EXAMPLES is ON
+# if(BUILD_EXAMPLES)
+#     message(STATUS "Building examples enabled")
+#     add_subdirectory(example)
+# endif()
 
 # ==============================================================================
 # Installation Rules

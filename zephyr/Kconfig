@@ -1,0 +1,27 @@
+menuconfig DANP_FTP
+    bool "Enable DANP File Transfer Protocol (FTP)"
+    help
+    Enable the DANP File Transfer Protocol (FTP) library.
+
+if DANP_FTP
+    config DANP_FTP_LOG_LEVEL
+        int "DANP_FTP log level"
+        default 2
+        help
+            Set the log level for the DANP module:
+            0: Off
+            1: Error
+            2: Warning
+            3: Info
+            4: Debug
+    config DANP_FTP_SERVICE_PORT
+        int "DANP FTP service port id"
+        default 21
+        help
+        Ser the service port id for DANP FTP
+    config DANP_FTP_SERVICE_TIMEOUT_MS
+        int "DANP FTP service timeout in milliseconds"
+        default 8000
+        help
+        Set the service timeout for DANP FTP in milliseconds.
+endif # DANP_FTP
