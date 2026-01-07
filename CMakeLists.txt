@@ -62,8 +62,6 @@ target_sources(DanpFtp
     PRIVATE
         # Core implementation files
         ${CMAKE_CURRENT_SOURCE_DIR}/src/danp_ftp.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/danp_ftp_service.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/arch/zephyr/danp_ftp_service_shell.c
 )
 
 # ==============================================================================
