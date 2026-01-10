@@ -108,7 +108,7 @@ static danp_ftp_status_t danp_ftp_send_message(
 
         if (payload_length > DANP_FTP_MAX_PAYLOAD_SIZE)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP payload too large: %u", payload_length);
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP payload too large: %u", payload_length);
             status = DANP_FTP_STATUS_INVALID_PARAM;
             break;
         }
@@ -136,13 +136,13 @@ static danp_ftp_status_t danp_ftp_send_message(
 
         if (send_result < 0)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP send failed: %d", send_result);
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP send failed: %d", send_result);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
             break;
         }
 
         danp_log_message(
-            DANP_LOG_DEBUG,
+            DANP_LOG_LEVEL_DBG,
             "FTP TX: type=%u flags=0x%02X seq=%u len=%u",
             type,
             flags,
@@ -191,11 +191,11 @@ static danp_ftp_status_t danp_ftp_receive_message(
         {
             if (recv_result == 0)
             {
-                danp_log_message(DANP_LOG_WARN, "FTP receive timeout");
+                danp_log_message(DANP_LOG_LEVEL_WRN, "FTP receive timeout");
             }
             else
             {
-                danp_log_message(DANP_LOG_ERROR, "FTP receive failed: %d", recv_result);
+                danp_log_message(DANP_LOG_LEVEL_ERR, "FTP receive failed: %d", recv_result);
             }
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
             break;
@@ -208,7 +208,7 @@ static danp_ftp_status_t danp_ftp_receive_message(
         if (calculated_crc != message->header.crc)
         {
             danp_log_message(
-                DANP_LOG_WARN,
+                DANP_LOG_LEVEL_WRN,
                 "FTP CRC mismatch: expected=0x%08X got=0x%08X",
                 message->header.crc,
                 calculated_crc);
@@ -217,7 +217,7 @@ static danp_ftp_status_t danp_ftp_receive_message(
         }
 
         danp_log_message(
-            DANP_LOG_DEBUG,
+            DANP_LOG_LEVEL_DBG,
             "FTP RX: type=%u flags=0x%02X seq=%u len=%u",
             message->header.type,
             message->header.flags,
@@ -265,7 +265,7 @@ static danp_ftp_status_t danp_ftp_wait_for_ack(
             else
             {
                 danp_log_message(
-                    DANP_LOG_WARN,
+                    DANP_LOG_LEVEL_WRN,
                     "FTP ACK seq mismatch: expected=%u got=%u",
                     expected_seq,
                     message.header.sequence_number);
@@ -275,14 +275,14 @@ static danp_ftp_status_t danp_ftp_wait_for_ack(
         }
         else if (message.header.type == DANP_FTP_PACKET_TYPE_NACK)
         {
-            danp_log_message(DANP_LOG_WARN, "FTP received NACK");
+            danp_log_message(DANP_LOG_LEVEL_WRN, "FTP received NACK");
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
             break;
         }
         else
         {
             danp_log_message(
-                DANP_LOG_WARN,
+                DANP_LOG_LEVEL_WRN,
                 "FTP unexpected packet type: %u",
                 message.header.type);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
@@ -322,7 +322,7 @@ danp_ftp_status_t danp_ftp_init(
         sock = danp_socket(DANP_TYPE_STREAM);
         if (!sock)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP failed to create socket");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP failed to create socket");
             status = DANP_FTP_STATUS_ERROR;
             break;
         }
@@ -331,7 +331,7 @@ danp_ftp_status_t danp_ftp_init(
         if (connect_result < 0)
         {
             danp_log_message(
-                DANP_LOG_ERROR,
+                DANP_LOG_LEVEL_ERR,
                 "FTP failed to connect to node %u: %d",
                 dst_node,
                 connect_result);
@@ -348,7 +348,7 @@ danp_ftp_status_t danp_ftp_init(
         handle->is_initialized = true;
 
         danp_log_message(
-            DANP_LOG_INFO,
+            DANP_LOG_LEVEL_INF,
             "FTP initialized for node %u",
             dst_node);
 
@@ -385,7 +385,7 @@ void danp_ftp_deinit(danp_ftp_handle_t *handle)
         handle->is_initialized = false;
         handle->state = DANP_FTP_STATE_IDLE;
 
-        danp_log_message(DANP_LOG_INFO, "FTP handle deinitialized");
+        danp_log_message(DANP_LOG_LEVEL_INF, "FTP handle deinitialized");
 
         break;
     }
@@ -428,14 +428,14 @@ danp_ftp_status_t danp_ftp_transmit(
 
         if (!handle->is_initialized)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP handle not initialized");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP handle not initialized");
             status = DANP_FTP_STATUS_ERROR;
             break;
         }
 
         if (!transfer_config->file_id || transfer_config->file_id_len == 0)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP invalid file ID");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP invalid file ID");
             status = DANP_FTP_STATUS_INVALID_PARAM;
             break;
         }
@@ -494,7 +494,7 @@ danp_ftp_status_t danp_ftp_transmit(
         if (response.header.type != DANP_FTP_PACKET_TYPE_RESPONSE)
         {
             danp_log_message(
-                DANP_LOG_ERROR,
+                DANP_LOG_LEVEL_ERR,
                 "FTP unexpected response type: %u",
                 response.header.type);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
@@ -504,7 +504,7 @@ danp_ftp_status_t danp_ftp_transmit(
         if (response.payload[0] != DANP_FTP_RESP_OK)
         {
             danp_log_message(
-                DANP_LOG_ERROR,
+                DANP_LOG_LEVEL_ERR,
                 "FTP write request rejected: %u",
                 response.payload[0]);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
@@ -515,7 +515,7 @@ danp_ftp_status_t danp_ftp_transmit(
         handle->total_bytes_transferred = 0;
         handle->sequence_number++;
 
-        danp_log_message(DANP_LOG_INFO, "FTP transmit started");
+        danp_log_message(DANP_LOG_LEVEL_INF, "FTP transmit started");
 
         /* Transfer data chunks */
         while (more)
@@ -531,7 +531,7 @@ danp_ftp_status_t danp_ftp_transmit(
             if (read_result < 0)
             {
                 danp_log_message(
-                    DANP_LOG_ERROR,
+                    DANP_LOG_LEVEL_ERR,
                     "FTP source callback failed: %d",
                     read_result);
                 status = read_result;
@@ -582,7 +582,7 @@ danp_ftp_status_t danp_ftp_transmit(
 
                 retries++;
                 danp_log_message(
-                    DANP_LOG_WARN,
+                    DANP_LOG_LEVEL_WRN,
                     "FTP retry %u/%u for seq %u",
                     retries,
                     max_retries,
@@ -591,7 +591,7 @@ danp_ftp_status_t danp_ftp_transmit(
 
             if (retries >= max_retries)
             {
-                danp_log_message(DANP_LOG_ERROR, "FTP max retries exceeded");
+                danp_log_message(DANP_LOG_LEVEL_ERR, "FTP max retries exceeded");
                 status = DANP_FTP_STATUS_TRANSFER_FAILED;
                 break;
             }
@@ -610,7 +610,7 @@ danp_ftp_status_t danp_ftp_transmit(
         handle->state = DANP_FTP_STATE_COMPLETE;
 
         danp_log_message(
-            DANP_LOG_INFO,
+            DANP_LOG_LEVEL_INF,
             "FTP transmit complete: %zu bytes",
             handle->total_bytes_transferred);
 
@@ -655,14 +655,14 @@ danp_ftp_status_t danp_ftp_receive(
 
         if (!handle->is_initialized)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP handle not initialized");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP handle not initialized");
             status = DANP_FTP_STATUS_ERROR;
             break;
         }
 
         if (!transfer_config->file_id || transfer_config->file_id_len == 0)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP invalid file ID");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP invalid file ID");
             status = DANP_FTP_STATUS_INVALID_PARAM;
             break;
         }
@@ -705,7 +705,7 @@ danp_ftp_status_t danp_ftp_receive(
         if (response.header.type != DANP_FTP_PACKET_TYPE_RESPONSE)
         {
             danp_log_message(
-                DANP_LOG_ERROR,
+                DANP_LOG_LEVEL_ERR,
                 "FTP unexpected response type: %u",
                 response.header.type);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
@@ -714,7 +714,7 @@ danp_ftp_status_t danp_ftp_receive(
 
         if (response.payload[0] == DANP_FTP_RESP_FILE_NOT_FOUND)
         {
-            danp_log_message(DANP_LOG_ERROR, "FTP file not found");
+            danp_log_message(DANP_LOG_LEVEL_ERR, "FTP file not found");
             status = DANP_FTP_STATUS_FILE_NOT_FOUND;
             break;
         }
@@ -722,7 +722,7 @@ danp_ftp_status_t danp_ftp_receive(
         if (response.payload[0] != DANP_FTP_RESP_OK)
         {
             danp_log_message(
-                DANP_LOG_ERROR,
+                DANP_LOG_LEVEL_ERR,
                 "FTP read request rejected: %u",
                 response.payload[0]);
             status = DANP_FTP_STATUS_TRANSFER_FAILED;
@@ -733,7 +733,7 @@ danp_ftp_status_t danp_ftp_receive(
         handle->total_bytes_transferred = 0;
         handle->sequence_number++;
 
-        danp_log_message(DANP_LOG_INFO, "FTP receive started");
+        danp_log_message(DANP_LOG_LEVEL_INF, "FTP receive started");
 
         /* Receive data chunks */
         while (more)
@@ -741,14 +741,14 @@ danp_ftp_status_t danp_ftp_receive(
             status = danp_ftp_receive_message(handle, &data_msg, timeout_ms);
             if (status < 0)
             {
-                danp_log_message(DANP_LOG_ERROR, "FTP receive data failed");
+                danp_log_message(DANP_LOG_LEVEL_ERR, "FTP receive data failed");
                 break;
             }
 
             if (data_msg.header.type != DANP_FTP_PACKET_TYPE_DATA)
             {
                 danp_log_message(
-                    DANP_LOG_WARN,
+                    DANP_LOG_LEVEL_WRN,
                     "FTP unexpected packet type: %u",
                     data_msg.header.type);
 
@@ -765,7 +765,7 @@ danp_ftp_status_t danp_ftp_receive(
             if (data_msg.header.sequence_number != handle->sequence_number)
             {
                 danp_log_message(
-                    DANP_LOG_WARN,
+                    DANP_LOG_LEVEL_WRN,
                     "FTP seq mismatch: expected=%u got=%u",
                     handle->sequence_number,
                     data_msg.header.sequence_number);
@@ -794,7 +794,7 @@ danp_ftp_status_t danp_ftp_receive(
             if (sink_result < 0)
             {
                 danp_log_message(
-                    DANP_LOG_ERROR,
+                    DANP_LOG_LEVEL_ERR,
                     "FTP sink callback failed: %d",
                     sink_result);
                 status = sink_result;
@@ -828,7 +828,7 @@ danp_ftp_status_t danp_ftp_receive(
         handle->state = DANP_FTP_STATE_COMPLETE;
 
         danp_log_message(
-            DANP_LOG_INFO,
+            DANP_LOG_LEVEL_INF,
             "FTP receive complete: %zu bytes",
             handle->total_bytes_transferred);
 
